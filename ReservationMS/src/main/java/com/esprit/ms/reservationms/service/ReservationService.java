@@ -116,7 +116,6 @@ public class ReservationService {
         return null;
     }
 
-    // Other methods remain the same...
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
