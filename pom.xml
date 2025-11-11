@@ -63,6 +63,11 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Spring for RabbitMQ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
         <!-- ✅ Swagger / Springdoc OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
