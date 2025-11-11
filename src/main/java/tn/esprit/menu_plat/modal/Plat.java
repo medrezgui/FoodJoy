@@ -26,7 +26,4 @@ public class Plat {
     @ManyToOne
     @JoinColumn(name = "menu_id")
     private Menu menu;
-
-
-
 }
