@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/espaces")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class EspaceController {
 

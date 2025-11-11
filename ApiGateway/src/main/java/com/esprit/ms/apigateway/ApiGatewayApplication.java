@@ -21,7 +21,7 @@ public class ApiGatewayApplication {
                 .route("route1ReservationMS",r->r.path("/reservations/**")
                         .uri("lb://ReservationMS"))
                 .route("route2TableMS",r->r.path("/tables/**")
-                        .uri("lb://Foodjoy"))
+                        .uri("lb://TableMS"))
              //   .route("route1JOB",r->r.path("/jobs/**")
                //         .uri("lb://le nom de votre ms dans app.properties"))
                 .build();

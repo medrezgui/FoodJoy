@@ -8,7 +8,7 @@ import tn.esprit.foodjoy.dto.EmployeeDto;
 
 import java.util.List;
 //TODO check with Service Employee for correct PORT  & NAME (either in eureka or in app props)
-@FeignClient(name="employee-s",url = "http://localhost:8088")
+@FeignClient(name="Employee",url = "http://localhost:8088")
 public interface EmployeeClient {
     //TODO check with Service Employee for correct path
     @RequestMapping("/employee/{id}")

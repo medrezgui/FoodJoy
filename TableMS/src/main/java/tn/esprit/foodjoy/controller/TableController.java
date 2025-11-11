@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tables")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class TableController {
 
@@ -91,7 +92,7 @@ public class TableController {
 
     //Employee
     //TODO check with Service Employee for correct path
-    @GetMapping("/employees/{id}")
+    @GetMapping("/api/employees/{id}")
     public EmployeeDto getEmployeeById(@PathVariable Long id){
         return tableService.getEmployeeById(id);
     }
