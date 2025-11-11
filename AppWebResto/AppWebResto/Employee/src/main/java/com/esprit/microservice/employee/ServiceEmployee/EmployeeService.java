@@ -4,6 +4,7 @@ import com.esprit.microservice.employee.EntityEmployee.Employee;
 import com.esprit.microservice.employee.RepositoryEmployee.EmployeeRepository;
 import com.esprit.microservice.employee.dto.AssignRequest;
 import com.esprit.microservice.employee.dto.AssignedEmployeeResponse;
+import com.esprit.microservice.employee.dto.EmployeeSimpleStatsResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
@@ -108,4 +109,33 @@ public class EmployeeService {
 		public String getClientNom() { return clientNom; }
 		public void setClientNom(String clientNom) { this.clientNom = clientNom; }
 	}
+    public EmployeeSimpleStatsResponse getSimpleStats() {
+
+        List<Employee> all = repository.findAll();
+
+        if (all.isEmpty()) {
+            return new EmployeeSimpleStatsResponse(0, 0, 0);
+        }
+
+        long totalEmployees = all.size();
+        long unavailableEmployees = all.stream().filter(e -> !e.isAvailable()).count();
+
+        double occupationRate = (double) unavailableEmployees / totalEmployees * 100.0;
+
+        double averageAssignments = all.stream()
+                .mapToInt(Employee::getAssignmentsCount)
+                .average()
+                .orElse(0);
+
+        long totalAssignments = all.stream()
+                .mapToInt(Employee::getAssignmentsCount)
+                .sum();
+
+        return new EmployeeSimpleStatsResponse(
+                occupationRate,
+                averageAssignments,
+                totalAssignments
+        );
+    }
+
 }

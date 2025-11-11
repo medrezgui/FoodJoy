@@ -4,6 +4,7 @@ import com.esprit.microservice.employee.EntityEmployee.Employee;
 import com.esprit.microservice.employee.ServiceEmployee.EmployeeService;
 import com.esprit.microservice.employee.dto.AssignRequest;
 import com.esprit.microservice.employee.dto.AssignedEmployeeResponse;
+import com.esprit.microservice.employee.dto.EmployeeSimpleStatsResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -59,5 +60,10 @@ public class EmployeeController {
 		}
 		return ResponseEntity.ok(updated);
 	}
+    @GetMapping("/stats/simple")
+    public EmployeeSimpleStatsResponse getSimpleStats() {
+        return service.getSimpleStats();
+    }
+
 
 }
