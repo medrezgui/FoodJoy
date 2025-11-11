@@ -137,4 +137,14 @@ public class ReservationService {
     public List<Reservation> getReservationsByStatut(Reservation.StatutReservation statut) {
         return reservationRepository.findByStatut(statut);
     }
+    public List<Reservation> getReservationsByTableId(Long tableId) {
+        return reservationRepository.findByTableId(tableId);
+    }
+
+    public Reservation getActiveReservationByTableId(Long tableId) {
+        return reservationRepository
+                .findFirstByTableIdAndStatut(tableId, Reservation.StatutReservation.CONFIRMEE)
+                .orElse(null);
+    }
+
 }

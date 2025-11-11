@@ -71,4 +71,14 @@ public class ReservationController {
         return reservation != null ? ResponseEntity.ok(reservation)
                 : ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/table/{tableId}")
+    public List<Reservation> getReservationsByTable(@PathVariable Long tableId) {
+        return reservationService.getReservationsByTableId(tableId);
+    }
+
+    @GetMapping("/table/{tableId}/active")
+    public Reservation getActiveReservationByTable(@PathVariable Long tableId) {
+        return reservationService.getActiveReservationByTableId(tableId);
+    }
 }

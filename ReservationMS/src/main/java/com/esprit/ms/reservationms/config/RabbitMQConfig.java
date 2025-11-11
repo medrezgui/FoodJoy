@@ -16,11 +16,12 @@ public class RabbitMQConfig {
     public static final String RESERVATION_EXCHANGE = "reservation.exchange";
     public static final String RESERVATION_QUEUE = "reservation.queue";
     public static final String RESERVATION_ROUTING_KEY = "reservation.routingkey";
-
+    public static final String TABLE_RESERV_QUEUE = "reservationQueue";
     // Notification Exchange and Queues
     public static final String NOTIFICATION_EXCHANGE = "notification.exchange";
     public static final String NOTIFICATION_QUEUE = "notification.queue";
     public static final String NOTIFICATION_ROUTING_KEY = "notification.routingkey";
+    public static final String TABLE_RESERV_ROUTING_KEY = "table.reservation.*";
 
     @Bean
     public TopicExchange reservationExchange() {
@@ -33,8 +34,20 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue tableReservQueue() {
+        return new Queue(TABLE_RESERV_QUEUE, true);
+    }
+
+    @Bean
     public Binding reservationBinding(Queue reservationQueue, TopicExchange reservationExchange) {
         return BindingBuilder.bind(reservationQueue).to(reservationExchange).with(RESERVATION_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding tableReservBinding(Queue tableReservQueue, TopicExchange reservationExchange) {
+        return BindingBuilder.bind(tableReservQueue)
+                .to(reservationExchange)
+                .with(TABLE_RESERV_ROUTING_KEY);
     }
 
     @Bean

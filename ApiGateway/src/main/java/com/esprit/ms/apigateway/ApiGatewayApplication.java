@@ -20,6 +20,8 @@ public class ApiGatewayApplication {
         return builder.routes()
                 .route("route1ReservationMS",r->r.path("/reservations/**")
                         .uri("lb://ReservationMS"))
+                .route("route2TableMS",r->r.path("/tables/**")
+                        .uri("lb://Foodjoy"))
              //   .route("route1JOB",r->r.path("/jobs/**")
                //         .uri("lb://le nom de votre ms dans app.properties"))
                 .build();
