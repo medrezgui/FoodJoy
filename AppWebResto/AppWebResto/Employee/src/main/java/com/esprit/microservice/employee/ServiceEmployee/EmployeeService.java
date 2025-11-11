@@ -41,7 +41,6 @@ public class EmployeeService {
             existing.setFirstName(employee.getFirstName());
             existing.setLastName(employee.getLastName());
             existing.setEmail(employee.getEmail());
-            existing.setPosition(employee.getPosition());
             existing.setSalary(employee.getSalary());
             return repository.save(existing);
         }
@@ -92,8 +91,6 @@ public class EmployeeService {
 			ResponseEntity<ReservationDto> response = restTemplate.getForEntity(url, ReservationDto.class);
 			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
 				ReservationDto reservation = response.getBody();
-				employee.setReservationId(reservationId);
-				employee.setReservationName(reservation.getClientNom());
 				return repository.save(employee);
 			}
 			return null;

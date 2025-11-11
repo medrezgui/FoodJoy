@@ -19,14 +19,12 @@ public class Employee {
     private String firstName;
     private String lastName;
     private String email;
-    private String position;
     private double salary;
     private String role;
     private boolean available = true;
     private int assignmentsCount = 0;
 
 	// Reservation linkage
-	private Long reservationId;
-	private String reservationName;
+
 
 }

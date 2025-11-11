@@ -41,9 +41,6 @@ public class ReservationEventConsumer {
 
         selected.setAvailable(false);
         selected.setAssignmentsCount(selected.getAssignmentsCount() + 1);
-		// set reservation linkage when event created
-		selected.setReservationId(event.getReservationId());
-		selected.setReservationName(event.getClientName());
 
         repository.save(selected);
 
