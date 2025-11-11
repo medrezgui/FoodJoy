@@ -10,13 +10,16 @@ import java.time.LocalDateTime;
 @Builder
 public class ReservationDto {
 
-
     private Long id;
-    private Integer nombrePersonnes;
+    private String clientNom;
+    private String clientEmail;
+    private String clientTelephone;
     private LocalDateTime dateReservation;
+    private Integer nombrePersonnes;
     private String statut;
+    private String commentaires;
     private Long tableId;
-
+    private LocalDateTime dateCreation;
     //  enum in DTO class or separately
 //    private StatutReservation statut;
 //    public enum StatutReservation {

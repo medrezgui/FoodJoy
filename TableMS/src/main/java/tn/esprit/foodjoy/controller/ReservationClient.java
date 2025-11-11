@@ -14,8 +14,8 @@ import java.util.List;
 public interface ReservationClient {
     //TODO check with Service Reservation for correct URL
     @RequestMapping("/reservations/table/{tableId}")
-    public List<ReservationEvent> getReservationsByTableId(@PathVariable("tableId") Long tableId);
+    public List<ReservationDto> getReservationsByTableId(@PathVariable("tableId") Long tableId);
     //TODO check with Service Reservation for correct URL
     @RequestMapping("/reservations/table/{tableId}/active")
-    public ReservationEvent getActiveReservationByTableId(@PathVariable("tableId") Long tableId);
+    public ReservationDto getActiveReservationByTableId(@PathVariable("tableId") Long tableId);
 }

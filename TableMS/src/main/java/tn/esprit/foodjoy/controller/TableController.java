@@ -4,10 +4,7 @@ package tn.esprit.foodjoy.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.foodjoy.dto.EmployeeDto;
-import tn.esprit.foodjoy.dto.EspaceDto;
-import tn.esprit.foodjoy.dto.ReservationEvent;
-import tn.esprit.foodjoy.dto.TableDto;
+import tn.esprit.foodjoy.dto.*;
 import tn.esprit.foodjoy.entity.TableStatus;
 import tn.esprit.foodjoy.service.TableService;
 
@@ -81,12 +78,12 @@ public class TableController {
     // Reservations
     //TODO check with Service Reservations for correct path
     @GetMapping("/reservations/table/{tableId}")
-    public List<ReservationEvent> getReservationsByTableId(@PathVariable Long tableId) {
+    public List<ReservationDto> getReservationsByTableId(@PathVariable Long tableId) {
         return tableService.getReservationsByTableId(tableId);
     }
     //TODO check with Service Reservations for correct path
     @GetMapping("/reservations/table/{tableId}/active")
-    public ReservationEvent getActiveReservationByTableId(@PathVariable Long tableId) {
+    public ReservationDto getActiveReservationByTableId(@PathVariable Long tableId) {
         return tableService.getActiveReservationByTableId(tableId);
     }
 

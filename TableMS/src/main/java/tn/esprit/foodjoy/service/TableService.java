@@ -21,8 +21,8 @@ public interface TableService {
     EmployeeDto getEmployeeById(Long id);
     List<EmployeeDto> getEmployeesByRole(String roleName);
     //Reservation Service
-    List<ReservationEvent> getReservationsByTableId(Long tableId);
-    ReservationEvent getActiveReservationByTableId(Long tableId);
+    List<ReservationDto> getReservationsByTableId(Long tableId);
+    ReservationDto getActiveReservationByTableId(Long tableId);
     void freeTable(Long tableId);
     // Fonctions avancées
     List<TableDto> findFreeTables();

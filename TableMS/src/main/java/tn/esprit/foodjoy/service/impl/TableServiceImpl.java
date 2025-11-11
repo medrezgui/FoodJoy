@@ -151,11 +151,11 @@ public class TableServiceImpl implements TableService {
     @Autowired
     private ReservationClient reservationServiceClient;
     @Override
-    public List<ReservationEvent> getReservationsByTableId(Long tableId) {
+    public List<ReservationDto> getReservationsByTableId(Long tableId) {
         return reservationServiceClient.getReservationsByTableId(tableId);
     }
     @Override
-    public ReservationEvent getActiveReservationByTableId(Long tableId) {
+    public ReservationDto getActiveReservationByTableId(Long tableId) {
         return reservationServiceClient.getActiveReservationByTableId(tableId);
     }
 
