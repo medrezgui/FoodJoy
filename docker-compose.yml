@@ -1,5 +1,35 @@
 version: '3.9'
+
 services:
+  # === INFRASTRUCTURE ===
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  mongodb:
+    image: mongo:7
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    command: --quiet
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
   configserver:
     build: ./ConfigServer
     image: configserverms:1.0
@@ -9,118 +39,26 @@ services:
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
     depends_on:
-      - eureka
-  reservation:
-    build: ./ReservationMS
-    image: reservationms:1.0
-    container_name: reservationms
-    ports:
-      - "8083:8083"
-    depends_on:
-      - eureka
-      - configserver
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
-  table:
-    build: ./TableMS
-    image: tablems:1.0
-    container_name: tablems
-    ports:
-      - "8085:8085"
-    depends_on:
-      - eureka
-      - configserver
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
-  stock:
-    build: ./stock
-    image: stockms:1.0
-    container_name: stockms
-    ports:
-      - "8095:8095"
-    depends_on:
-      - eureka
-      - configserver
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
-  menu:
-    build: ./Menu_PlatMS
-    image: menums:1.0
-    container_name: menums
-    ports:
-      - "8082:8082"
-    depends_on:
-      - eureka
-      - configserver
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
-  commande:
-    build: ./gestion-commandeMS
-    image: commandems:1.0
-    container_name: commandems
-    ports:
-      - "8081:8081"
-    depends_on:
-      - eureka
-      - configserver
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
-  facture:
-    build: ./facture
-    image: facturems:1.0
-    container_name: facturems
-    ports:
-      - "8084:8084"
-    depends_on:
-      - eureka
-      - configserver
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
-  employee:
-    build: ./Employee
-    image: employeems:1.0
-    container_name: employeems
-    ports:
-      - "8088:8088"
-    depends_on:
-      - eureka
-      - configserver
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
-  servicecommun:
-    build: ./Service_comunn
-    image: servicems:1.0
-    container_name: job
-    ports:
-      - "5000:5000"
-    environment:
-      - MONGO_URI=mongodb://localhost:27017/marketingFidelite
-    depends_on:
-      - eureka
-      - configserver
-      - mongodb
+      eureka:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   eureka:
     build: ./EurekaServer
     image: eurekams:1.0
     container_name: eureka
     ports:
       - "8761:8761"
-    environment:
-      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   api-gateway:
     build: ./ApiGateway
     image: apigatewayms:1.0
@@ -129,12 +67,155 @@ services:
       - "8087:8087"
     environment:
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
-      - SPRING_CLOUD_CONFIG_URI=http://configserver:8888
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
     depends_on:
-      - eureka
-      - configserver
-      - reservation
-      - (votre MS)
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8087/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # === SPRING BOOT MICROSERVICES ===
+  menu:
+    build: ./Menu_PlatMS
+    image: menums:1.0
+    container_name: menums
+    ports:
+      - "8082:8082"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  commande:
+    build: ./gestion-commandeMS
+    image: commandems:1.0
+    container_name: commandems
+    ports:
+      - "8081:8081"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+      - SPRING_RABBITMQ_HOST=rabbitmq
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      menu:
+        condition: service_started
+
+  reservation:
+    build: ./ReservationMS
+    image: reservationms:1.0
+    container_name: reservationms
+    ports:
+      - "8083:8083"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+
+  table:
+    build: ./TableMS
+    image: tablems:1.0
+    container_name: tablems
+    ports:
+      - "8085:8085"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+
+  facture:
+    build: ./facture
+    image: facturems:1.0
+    container_name: facturems
+    ports:
+      - "8084:8084"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+
+  stock:
+    build: ./stock
+    image: stockms:1.0
+    container_name: stockms
+    ports:
+      - "8095:8095"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+
+  employee:
+    build: ./Employee
+    image: employeems:1.0
+    container_name: employeems
+    ports:
+      - "8088:8088"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://configserver:8888
+    depends_on:
+      configserver:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+
+  # === SERVICE COMMUN (Node.js + Express + MongoDB) ===
+  servicecommun:
+    build: ./Service_comunn
+    image: servicecommunms:1.0
+    container_name: servicecommun
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./Service_comunn/.env  # Utilise ton .env existant
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/marketingFidelite  # Surcharge locale
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: unless-stopped
+
+  # === AUTH ===
   keycloak:
     image: quay.io/keycloak/keycloak:26.3.1
     container_name: keycloak
@@ -144,6 +225,15 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/realms/master"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
 
-  
-
+# === VOLUMES ===
+volumes:
+  mongodb_data:
+  keycloak_data:
