@@ -51,64 +51,43 @@ public class EmployeeService {
     public void delete(Long id) {
         repository.deleteById(id);
     }
-    public AssignedEmployeeResponse assignEmployeeToReservation(AssignRequest request) {
 
-        // 1 — Trouver les employés du rôle + disponibles
-        List<Employee> candidats = repository.findByRoleAndAvailableTrueOrderByAssignmentsCountAsc(
-                request.getRole()
-        );
 
-        if (candidats.isEmpty()) {
-            throw new RuntimeException("Aucun employé disponible pour le rôle : " + request.getRole());
+    public Employee assignReservationToEmployee(Long employeeId, Long reservationId) {
+        Employee employee = repository.findById(employeeId).orElse(null);
+        if (employee == null) {
+            return null;
         }
 
-        // 2 — Choisir le moins chargé
-        Employee choisi = candidats.get(0);
+        RestTemplate restTemplate = new RestTemplate();
+        String url = reservationServiceBaseUrl + "/reservations/" + reservationId;
+        try {
+            ResponseEntity<ReservationDto> response = restTemplate.getForEntity(url, ReservationDto.class);
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                ReservationDto reservation = response.getBody();
+                employee.setReservationId(reservationId);
+                employee.setReservationName(reservation.getClientNom());
+                // Incrémenter le compteur
+                employee.setAssignmentsCount(employee.getAssignmentsCount() + 1);
 
-        // 3 — Mettre à jour l’état de l’employé
-        choisi.setAvailable(false);
-        choisi.setAssignmentsCount(choisi.getAssignmentsCount() + 1);
 
-        repository.save(choisi);
-
-        // 4 — Retourner DTO
-        return new AssignedEmployeeResponse(
-                choisi.getId(),
-                choisi.getFirstName(),
-                choisi.getLastName(),
-                choisi.getRole()
-        );
+                return repository.save(employee);
+            }
+            return null;
+        } catch (HttpClientErrorException.NotFound ex) {
+            return null;
+        }
     }
 
-	public Employee assignReservationToEmployee(Long employeeId, Long reservationId) {
-		Employee employee = repository.findById(employeeId).orElse(null);
-		if (employee == null) {
-			return null;
-		}
-
-		RestTemplate restTemplate = new RestTemplate();
-		String url = reservationServiceBaseUrl + "/reservations/" + reservationId;
-		try {
-			ResponseEntity<ReservationDto> response = restTemplate.getForEntity(url, ReservationDto.class);
-			if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
-				ReservationDto reservation = response.getBody();
-				return repository.save(employee);
-			}
-			return null;
-		} catch (HttpClientErrorException.NotFound ex) {
-			return null;
-		}
-	}
-
-	// Minimal DTO for ReservationMS response mapping
-	private static class ReservationDto {
-		private Long id;
-		private String clientNom;
-		public Long getId() { return id; }
-		public void setId(Long id) { this.id = id; }
-		public String getClientNom() { return clientNom; }
-		public void setClientNom(String clientNom) { this.clientNom = clientNom; }
-	}
+    // Minimal DTO for ReservationMS response mapping
+    private static class ReservationDto {
+        private Long id;
+        private String clientNom;
+        public Long getId() { return id; }
+        public void setId(Long id) { this.id = id; }
+        public String getClientNom() { return clientNom; }
+        public void setClientNom(String clientNom) { this.clientNom = clientNom; }
+    }
     public EmployeeSimpleStatsResponse getSimpleStats() {
 
         List<Employee> all = repository.findAll();

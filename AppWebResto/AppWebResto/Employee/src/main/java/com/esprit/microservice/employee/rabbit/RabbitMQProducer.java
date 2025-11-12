@@ -22,9 +22,7 @@ public class RabbitMQProducer {
     /**
      * Méthode pratique pour envoyer un événement de réservation
      */
-    public void sendReservationEvent(Object event) {
-        sendEvent(event, RabbitMQConfig.RESERVATION_EXCHANGE, RabbitMQConfig.RESERVATION_ROUTING_KEY);
-    }
+
 
     /**
      * Méthode pratique pour envoyer une notification

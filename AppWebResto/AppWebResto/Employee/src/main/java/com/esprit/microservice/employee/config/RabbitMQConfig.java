@@ -16,8 +16,7 @@ public class RabbitMQConfig {
 
     // Reservation
     public static final String RESERVATION_QUEUE = "reservation.queue";
-    public static final String RESERVATION_EXCHANGE = "reservation.exchange";
-    public static final String RESERVATION_ROUTING_KEY = "reservation.routingkey";
+
 
     // Notification (à ajouter pour Employee MS)
     public static final String NOTIFICATION_QUEUE = "notification.queue";
@@ -37,10 +36,7 @@ public class RabbitMQConfig {
     }
 
     // Exchange reservation
-    @Bean
-    public TopicExchange reservationExchange() {
-        return new TopicExchange(RESERVATION_EXCHANGE);
-    }
+
 
     // Exchange notification
     @Bean
@@ -49,10 +45,7 @@ public class RabbitMQConfig {
     }
 
     // Binding reservation
-    @Bean
-    public Binding reservationBinding(Queue reservationQueue, TopicExchange reservationExchange) {
-        return BindingBuilder.bind(reservationQueue).to(reservationExchange).with(RESERVATION_ROUTING_KEY);
-    }
+
 
     // Binding notification
     @Bean

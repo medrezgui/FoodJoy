@@ -23,6 +23,8 @@ public class Employee {
     private String role;
     private boolean available = true;
     private int assignmentsCount = 0;
+    private Long reservationId;
+    private String reservationName;
 
 	// Reservation linkage
 
