@@ -1,0 +1,594 @@
+{
+  "info": {
+    "name": "Gestion Commande MS",
+    "description": "Collection Postman pour tester l'ensemble des API exposées par le microservice gestion-commandeMS.",
+    "_postman_id": "f5f1a3d4-6e21-4476-9fdf-7c1fcb46d567",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Commandes",
+      "item": [
+        {
+          "name": "Créer une commande",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"typeCommande\": \"SUR_PLACE\",\n    \"employeId\": 1,\n    \"tableId\": 5,\n    \"lignesCommande\": [\n        {\n            \"platId\": 1,\n            \"quantite\": 2,\n            \"prixUnitaire\": 15.50,\n            \"commentaire\": \"Sans oignons\"\n        },\n        {\n            \"platId\": 2,\n            \"quantite\": 1,\n            \"prixUnitaire\": 8.00,\n            \"commentaire\": null\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtenir commande par ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtenir commande par numéro",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/numero/{{numeroCommande}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "numero",
+                "{{numeroCommande}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister toutes les commandes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mettre à jour une commande",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"typeCommande\": \"À_EMPORTER\",\n    \"employeId\": 2,\n    \"tableId\": null,\n    \"lignesCommande\": [\n        {\n            \"id\": {{ligneId}},\n            \"platId\": 3,\n            \"quantite\": 1,\n            \"prixUnitaire\": 12.00,\n            \"commentaire\": \"Prévoir couverts\"\n        }\n    ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer une commande",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Changer le statut d'une commande",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"nouveauStatut\": \"PREPARATION\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}/statut",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}",
+                "statut"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Calculer le total d'une commande",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}/total",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}",
+                "total"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rechercher par statut",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/statut/{{statut}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "statut",
+                "{{statut}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rechercher par type",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/type/{{typeCommande}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "type",
+                "{{typeCommande}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rechercher par employé",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/employe/{{employeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "employe",
+                "{{employeId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rechercher par table",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/table/{{tableId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "table",
+                "{{tableId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister les lignes d'une commande",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}/lignes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}",
+                "lignes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Ajouter une ligne à une commande",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"platId\": 4,\n    \"quantite\": 1,\n    \"prixUnitaire\": 20.00,\n    \"commentaire\": \"Sans gluten\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}/lignes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}",
+                "lignes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mettre à jour une ligne de commande (via commandes)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": {{ligneId}},\n    \"platId\": 5,\n    \"quantite\": 2,\n    \"prixUnitaire\": 6.50,\n    \"commentaire\": \"Ajouter sauce\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}/lignes/{{ligneId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}",
+                "lignes",
+                "{{ligneId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer une ligne de commande (via commandes)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}/lignes/{{ligneId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}",
+                "lignes",
+                "{{ligneId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer toutes les lignes d'une commande (via commandes)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/commandes/{{commandeId}}/lignes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "commandes",
+                "{{commandeId}}",
+                "lignes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Lignes de Commande (API dédiée)",
+      "item": [
+        {
+          "name": "Créer une ligne (API dédiée)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"platId\": 6,\n    \"quantite\": 1,\n    \"prixUnitaire\": 18.00,\n    \"commentaire\": \"Sauce à part\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande/commande/{{commandeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande",
+                "commande",
+                "{{commandeId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtenir une ligne par ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande/{{ligneId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande",
+                "{{ligneId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister toutes les lignes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister les lignes par commande",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande/commande/{{commandeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande",
+                "commande",
+                "{{commandeId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister les lignes par plat",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande/plat/{{platId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande",
+                "plat",
+                "{{platId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mettre à jour une ligne (API dédiée)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"id\": {{ligneId}},\n    \"platId\": 7,\n    \"quantite\": 3,\n    \"prixUnitaire\": 7.00,\n    \"commentaire\": \"Extra épicé\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande/{{ligneId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande",
+                "{{ligneId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer une ligne (API dédiée)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande/{{ligneId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande",
+                "{{ligneId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer toutes les lignes d'une commande (API dédiée)",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/lignes-commande/commande/{{commandeId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "lignes-commande",
+                "commande",
+                "{{commandeId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8099"
+    },
+    {
+      "key": "commandeId",
+      "value": "1"
+    },
+    {
+      "key": "numeroCommande",
+      "value": "CMD-001-20241201"
+    },
+    {
+      "key": "ligneId",
+      "value": "1"
+    },
+    {
+      "key": "statut",
+      "value": "EN_ATTENTE"
+    },
+    {
+      "key": "typeCommande",
+      "value": "SUR_PLACE"
+    },
+    {
+      "key": "employeId",
+      "value": "1"
+    },
+    {
+      "key": "tableId",
+      "value": "5"
+    },
+    {
+      "key": "platId",
+      "value": "1"
+    }
+  ]
+}
+
